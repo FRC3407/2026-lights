@@ -18,10 +18,10 @@ animation = [
 
 # List of PixelStrips
 strip = [
-    PixelStrip(board.NEOPIXEL0, 120, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
-    PixelStrip(board.NEOPIXEL1, width=32, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR}),
-    PixelStrip(board.NEOPIXEL2, width=32, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.NEOPIXEL4, 24, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS)
+    PixelStrip(board.GP13, 120, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
+    PixelStrip(board.GP15, width=32, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR}),
+    PixelStrip(board.GP16, width=32, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP18, 24, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS)
 ]
 # The built-in LED will turn on for half a second after every message 
 led = digitalio.DigitalInOut(board.LED)
@@ -57,10 +57,10 @@ def main(i2c):
     "Main program loop, for reading messages and changing Animations." 
     global strip, led
     last_msg_time = 0.0
-    strip[0].animation = animation[3] # 
-    strip[1].animation = animation[6] # top panel    - channel 1
-    strip[2].animation = animation[8] # bottom panel - channel 2
-    strip[3].animation = animation[4] # ring light   - channel 4 side strips  - channel 3
+    strip[0].animation = animation[0] 
+    strip[1].animation = animation[0]
+    strip[2].animation = animation[0]
+    strip[3].animation = animation[0]
     while True:
         for s in strip:
             s.draw()
