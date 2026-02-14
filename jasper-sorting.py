@@ -15,14 +15,16 @@ class ImageAnimation(pixelstrip.Animation):
         self.list = [1,2,3,4,5,6,7,8]
         self.shuffle()
         self.cursor = 0
+        self.correct = True
+        self.timeout2 = 0
 
     def shuffle(self):
         self.list = []
-        for i in range(8):
-            self.list.append(random.randrange(0,8))
+        for i in range(self.width):
+            self.list.append(random.randrange(2,9))
 
     def reset(self, matrix):
-        self.timeout = 0
+        self.timeout = 0.1
         matrix.clear()
         matrix.show()
 
@@ -30,15 +32,37 @@ class ImageAnimation(pixelstrip.Animation):
         if self.is_timed_out():
             self.draw_image(matrix)
             matrix.show()
-            self.timeout = 0
+            self.timeout = 0.0
     
     def draw_image(self, matrix):
+        if self.timeout2 > 0:
+            self.timeout2 -= 1
+            return
+        if self.timeout2 == 0:
+            self.shuffle()
+            self.cursor = 0
+            self.correct = True
+            self.timeout2 = -1
+            return
+        if self.cursor == self.width-1:
+            if self.correct:
+                self.timeout2 = 100
+                return
+            else:
+                self.cursor = 0
+                self.correct = True
+        if self.list[self.cursor] > self.list[self.cursor+1]:
+            self.correct = False
+            self.list[self.cursor], self.list[self.cursor+1] = self.list[self.cursor+1], self.list[self.cursor]
+        self.cursor += 1
         currentTime = self.time
         matrix.fill(BLACK)
         for i in range(8):
             # print(self.imgdata[frame])
             for j in range(8):
                 color = (255,255,255)
+                if self.cursor > i and self.correct: 
+                    color = (0,255,0)
                 if self.cursor == i:
                     color = (255,0,0)
                 if self.list[i] > j:
