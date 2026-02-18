@@ -1,6 +1,12 @@
 import digitalio
 import board
 import random
+from eyesAnim1LookAround import eyesAnim1LookAround
+from eyesAnim2RollAround import eyesAnim2RollAround
+from eyesAnim3Blink import eyesAnim3Blink
+from eyesAnim4AngryLeft import eyesAnim4AngryLeft
+from eyesAnim4AngryRight import eyesAnim4AngryRight
+from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from time import sleep
 from i2ctarget import I2CTarget
 from pixelstrip import PixelStrip, current_time, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG, RGB, MATRIX_TOP, MATRIX_LEFT
@@ -38,27 +44,28 @@ def receive_message():
     byte.  If there is a param associated with this message, it is 
     concatenated after the first byte.
     """
-    global i2c
-    message = i2c.request()
-    if not message:
-        return None
-    with message:
-        message_bytes = message.read()
-        b = message_bytes[0]
-        strip_num = int((b & 0xE0) >> 5)
-        anim_num = int(b & 0x1F)
-        param = None 
-        if len(message_bytes) > 1:
-            param = message_bytes[1:].decode('utf-8')
-        print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
-        return (strip_num, anim_num, param)
+    # global i2c
+    # message = i2c.request()
+    # if not message:
+    #     return None
+    # with message:
+    #     message_bytes = message.read()
+    #     b = message_bytes[0]
+    #     strip_num = int((b & 0xE0) >> 5)
+    #     anim_num = int(b & 0x1F)
+    #     param = None 
+    #     if len(message_bytes) > 1:
+    #         param = message_bytes[1:].decode('utf-8')
+    #     print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
+    #     return (strip_num, anim_num, param)
+    return None
 
 googly_eyes_on = True
 googly_eyes_timeout = 0
 
 def main(i2c): 
     "Main program loop, for reading messages and changing Animations." 
-    global strip, led
+    global strip, led, googly_eyes_on, googly_eyes_timeout
     last_msg_time = 0.0
     strip[0].animation = animation[0] 
     strip[1].animation = animation[0]
@@ -87,7 +94,7 @@ def main(i2c):
         if googly_eyes_on:
             if current_time() > googly_eyes_timeout:
                 pick_random_eyes()
-                googly_eyes_timeout = current_time() + 5
+                googly_eyes_timeout = current_time() + 10
 
 
 #Picks a random animation for the eyes to play, then calls the corresponding class to run
@@ -133,6 +140,6 @@ def blink(n, color=BLUE, sleep_time=0.4):
 
 if __name__ == "__main__": 
     blink(2, BLUE)
-    with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
-        blink(1, GREEN)
-        main(i2c) 
+    #with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
+    blink(1, GREEN)
+    main(i2c) 
