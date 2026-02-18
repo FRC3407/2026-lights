@@ -4,7 +4,7 @@ import pixelstrip
 from colors import *
 
 
-class ImageAnimation(pixelstrip.Animation):
+class eyesAnim4AngryRight(pixelstrip.Animation):
 
     def __init__(self, cycle_time=0.5):
         pixelstrip.Animation.__init__(self)
