@@ -7,12 +7,14 @@ from colors import *
 
 class ImageAnimation(pixelstrip.Animation):
 
-    def __init__(self, cycle_time=0.5,offset=0):
+    def __init__(self, cycle_time=0.5,offset=0,emotion=1,mirror = False):
         pixelstrip.Animation.__init__(self)
         self.cycle_time = cycle_time
         self.current_frame = 0
-        self.imgdata = [[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]]]
-        self.colorlist = [(0, 0, 0), (255, 255, 255)]
+        self.mirror = mirror
+        self.emotion = emotion
+        self.imgdata = [[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[2,2,0,0,0,0,0,0],[2,2,2,0,0,0,0,0],[2,2,2,2,0,0,0,0],[2,2,2,2,2,0,0,0],[2,2,2,2,2,2,0,0],[2,2,2,2,2,2,2,0],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]]]
+        self.colorlist = [(0, 0, 0), (255, 255, 255),(255,0,255)]
         self.eyePosition = [4,4]
         self.eyeVelocity = [0,0]
         # self.eyePosition2 = [4,4]
@@ -44,7 +46,7 @@ class ImageAnimation(pixelstrip.Animation):
         for i in range(self.width):
             # print(self.imgdata[frame])
             for j in range(self.height):
-                matrix[self.height-1-i, j] = self.colorlist[self.imgdata[self.current_frame][i][j]]
+                matrix[self.height-1-i, j] = self.colorlist[self.imgdata[0][i][j]]
         matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])] = (0,0,0)
         matrix[math.floor(self.eyePosition[0]-1),math.floor(self.eyePosition[1])] = (0,0,0)
         matrix[math.floor(self.eyePosition[0]+1),math.floor(self.eyePosition[1])] = (0,0,0)
@@ -56,7 +58,11 @@ class ImageAnimation(pixelstrip.Animation):
         self.eyeVelocity[1] *= 0.9
         self.eyePosition[0] += self.eyeVelocity[0]
         self.eyePosition[1] += self.eyeVelocity[1]
-        self.eyeVelocity[1] += 0.35
+        if self.emotion == 0:
+            self.eyeVelocity[1] += 0.35
+        if self.emotion == 1:
+            self.eyeVelocity[0] += 4-self.eyePosition[0]
+            self.eyeVelocity[1] += 4-self.eyePosition[1]
         self.eyelid = math.pow(math.sin(self.time*0.05),500)-0.1
         if (math.sqrt(math.pow(self.eyePosition[0]-4,2)+math.pow(self.eyePosition[1]-4,2)) > 3.1):
             angle = math.atan2(self.eyePosition[1]-4,self.eyePosition[0]-4)
@@ -67,6 +73,15 @@ class ImageAnimation(pixelstrip.Animation):
             self.eyePosition[1] = math.sin(angle)*3.1+4
             # self.eyeVelocity[0] *= 1.2
             # self.eyeVelocity[1] *= 1.2
+        if self.emotion == 1:
+            for i in range(8):
+                for j in range(8):
+                    k = i
+                    if self.mirror:
+                        k = 7-i
+                    color = self.colorlist[self.imgdata[1][j][k]]
+                    if not (color[0]==255 and color[1] == 0 and color[2] == 255):
+                        matrix[i,j] = color
         for i in range(self.eyelid*4):
             for j in range(8):
                 matrix[j,i] = (0,0,0)
@@ -74,9 +89,9 @@ class ImageAnimation(pixelstrip.Animation):
 
 if __name__ == "__main__": 
     matrix1 = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix1.animation = ImageAnimation(0,0)
+    matrix1.animation = ImageAnimation(0,0,1)
     matrix2 = pixelstrip.PixelStrip(board.GP16, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix2.animation = ImageAnimation(0,2)
+    matrix2.animation = ImageAnimation(0,2,1,True)
     while True:
         matrix1.draw()
         matrix2.draw()

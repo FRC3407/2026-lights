@@ -9,7 +9,7 @@ class ImageAnimation(pixelstrip.Animation):
 
     def __init__(self):
         pixelstrip.Animation.__init__(self)
-        self.width = 32
+        self.width = 8
         self.height = 8
         self.time = 0
         self.list = [1,2,3,4,5,6,7,8]
@@ -45,8 +45,8 @@ class ImageAnimation(pixelstrip.Animation):
             self.timeout2 = -1
             return
         if self.cursor == self.width-1:
-            self.drawLine(30,matrix)
-            self.drawLine(31,matrix)
+            self.drawLine(self.width-2,matrix)
+            self.drawLine(self.width-1,matrix)
 
             if self.correct:
                 self.timeout2 = 100
@@ -90,7 +90,7 @@ class ImageAnimation(pixelstrip.Animation):
                 matrix[i,j] = (0,0,0)
 
 if __name__ == "__main__": 
-    matrix1 = pixelstrip.PixelStrip(board.GP15, width=32, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
+    matrix1 = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
     matrix1.animation = ImageAnimation()
     while True:
         matrix1.draw()
