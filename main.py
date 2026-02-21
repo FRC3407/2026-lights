@@ -26,7 +26,7 @@ animation = [
 # List of PixelStrips
 strip = [
     PixelStrip(board.GP13, 120, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
-    PixelStrip(board.GP15, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR}),
+    PixelStrip(board.GP15, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
     PixelStrip(board.GP16, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
     PixelStrip(board.GP18, 24, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS)
 ]
@@ -99,7 +99,7 @@ def main(i2c):
 
 #Picks a random animation for the eyes to play, then calls the corresponding class to run
 def pick_random_eyes():
-    random_anim = random.randint(0,4)
+    random_anim = random.randint(0,3)
     if random_anim == 0:
         strip[1].animation = eyesAnim1LookAround()
         strip[2].animation = eyesAnim1LookAround()

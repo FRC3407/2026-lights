@@ -6,12 +6,12 @@ from colors import *
 
 class eyesAnim2RollAround(pixelstrip.Animation):
 
-    def __init__(self, cycle_time=0.5):
+    def __init__(self, cycle_time=0.15):
         pixelstrip.Animation.__init__(self)
         self.cycle_time = cycle_time
         self.current_frame = 0
         self.imgdata = [[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,2,2,2,1,1,1],[0,1,2,2,2,1,1,0],[0,0,2,2,2,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,2,2,2,1,1,1,1],[1,2,2,2,1,1,1,1],[0,2,2,2,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[2,2,2,1,1,1,1,1],[2,2,2,1,1,1,1,1],[2,2,2,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[2,2,2,1,1,1,1,1],[2,2,2,1,1,1,1,1],[2,2,2,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,2,2,2,1,1,1,0],[1,2,2,2,1,1,1,1],[1,2,2,2,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,2,2,2,1,0,0],[0,1,2,2,2,1,1,0],[1,1,2,2,2,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,2,2,2,0,0],[0,1,1,2,2,2,1,0],[1,1,1,2,2,2,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,2,2,2,0],[1,1,1,1,2,2,2,1],[1,1,1,1,2,2,2,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,2,2,2],[1,1,1,1,1,2,2,2],[1,1,1,1,1,2,2,2],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,2,2,2],[1,1,1,1,1,2,2,2],[1,1,1,1,1,2,2,2],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,2,2,2,1],[1,1,1,1,2,2,2,1],[0,1,1,1,2,2,2,0],[0,0,1,1,1,1,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]]]
-        self.colorlist = [(0, 0, 0), (13, 13, 13), (2, 2, 5)]
+        self.colorlist = [(0, 0, 0), (13, 13, 13), (2, 2, 4)]
 
         self.frames = len(self.imgdata)
         self.width = len(self.imgdata[0][0])
@@ -19,14 +19,17 @@ class eyesAnim2RollAround(pixelstrip.Animation):
 
     def reset(self, matrix):
         self.timeout = self.cycle_time
-        matrix.clear()
-        matrix.show()
         self.current_frame = 0
 
     def draw(self, matrix, delta_time):
         if self.is_timed_out():
-            self.draw_image(matrix, self.current_frame)
-            self.current_frame = (self.current_frame + 1) % self.frames
+            if self.current_frame < self.frames-1:
+                self.current_frame = (self.current_frame + 1) % self.frames
+                self.draw_image(matrix, self.current_frame)
+            else:
+                self.current_frame = (self.current_frame + 1) % self.frames
+                self.draw_image(matrix, self.current_frame)
+                self.current_frame = (self.current_frame - 1) % self.frames
             matrix.show()
             self.timeout = self.cycle_time
     
@@ -42,6 +45,6 @@ class eyesAnim2RollAround(pixelstrip.Animation):
 
 if __name__ == "__main__": 
     matrix = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix.animation = ImageAnimation(0.1)
+    matrix.animation = ImageAnimation(0.15)
     while True:
         matrix.draw()
