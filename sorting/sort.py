@@ -1,0 +1,185 @@
+import random
+import math
+
+def random_sample_recreation(population, k):
+    if k < 0 or k > len(population):
+        raise ValueError("Sample size k must be between 0 and the population size")
+
+    # Work with a copy to avoid modifying the original list
+    temp_population = list(population)
+    result = []
+
+    for _ in range(k):
+        # Pick a random index from the remaining population
+        random_index = random.randrange(len(temp_population))
+
+        # Append the item at that index to the result
+        result.append(temp_population.pop(random_index))
+
+    return result
+
+class Sort:
+    def __init__(self, w, h):
+        randarr: list[float] = [random.random() for i in range(w)]
+        roundarr: list[int] = list(map(lambda x : round(x*h), randarr))
+        self.arr: list[int] = roundarr
+        
+        self.width: int = w
+        self.height: int = h
+        self.pos: int = 0
+        
+        self.verified: bool = True
+        self.done: int = 0
+    
+    def reroll(self):
+        randarr: list[float] = [random.random() for i in range(self.width)]
+        roundarr: list[int] = list(map(lambda x : round(x*self.height), randarr))
+        self.arr = roundarr
+    
+    def step(self):
+        self.verified = self.arr == sorted(self.arr)
+    
+    def draw(self, matrix):
+        if self.done >= 2: return
+        
+        matrix.npxl.fill((0, 0, 0))
+        
+        arrlen: int = len(self.arr)
+        for i in range(arrlen):
+            color = (255, 255, 255)
+            
+            if self.done >= 1:
+                if i <= self.pos: color = (0, 255, 0)
+            elif i == self.pos: color = (255, 255, 0)
+            
+            val = self.arr[i]
+            for y in range(self.height):
+                matrix[arrlen-i-1, y] = color if y <= val else (0, 0, 0)
+
+
+
+# ================================ SORT MAKING !!! ================================ #
+
+class BubbleSort(Sort):
+    def step(self):
+        Sort.step(self)
+        
+        if self.pos < len(self.arr) - 1:
+            current: int = self.arr[self.pos]
+            test: int = self.arr[self.pos+1]
+            
+            if test < current:
+                self.arr[self.pos+1] = current
+                self.arr[self.pos] = test
+            
+            self.pos += 1
+        else:
+            self.pos = 0
+            if self.verified:
+                self.done += 1
+
+class StalinSort(Sort):
+    def step(self):
+        Sort.step(self)
+        
+        if self.pos < len(self.arr) - 1:
+            current: int = self.arr[self.pos]
+            test: int = self.arr[self.pos+1]
+            
+            if test < current:
+                self.arr.pop(self.pos+1)
+            
+            self.pos += 1
+        else:
+            self.pos = 0
+            if self.verified:
+                self.done += 1
+
+class IngsocSort(Sort):
+    def step(self):
+        Sort.step(self)
+        
+        if self.pos < len(self.arr) - 1:
+            current: int = self.arr[self.pos]
+            test: int = self.arr[self.pos+1]
+            
+            diff: int = test - current
+            if diff < -3:
+                self.arr.pop(self.pos+1)
+            elif diff < 0:
+                self.arr[self.pos+1] += 1
+            
+            self.pos += 1
+        else:
+            self.pos = 0
+            if self.verified:
+                self.done += 1
+
+class MiracleSort(Sort):
+    def step(self):
+        if self.verified:
+            self.done += 1
+
+class BogoSort(Sort):
+    def step(self):
+        self.arr = random_sample_recreation(self.arr, len(self.arr))
+        if self.verified:
+            self.done += 1
+            self.pos = 0
+        else:
+            self.pos = -1
+
+class DarwinSort(Sort):
+    def step(self):
+        Sort.step(self)
+
+class QuickSort(Sort):
+    def __init__(self, w, h):
+        Sort.__init__(self, w, h)
+        
+        self.lo = 0
+        self.hi = len(self.arr) - 1
+    
+    def step(self):
+        Sort.step(self)
+
+
+
+
+SORTS: list[type[Sort]] = [
+    BubbleSort,
+    QuickSort,
+    StalinSort,
+    IngsocSort
+]
+
+class AmericaSort(Sort):
+    def __init__(self, w, h):
+        Sort.__init__(self, w, h)
+        
+        self.president: type[Sort] = MiracleSort
+        self.year = 1
+    
+    def step(self):
+        Sort.step(self)
+        
+        if self.year % 4 == 0:
+            candidates: list[type[Sort]] = random_sample_recreation(SORTS, 2)
+            
+            results: list[int] = self.hold_vote()
+            while results[0] == results[1]:
+                results = self.hold_vote()
+            
+            winner: type[Sort] = candidates[int(results[0] > results[1])]
+            self.president = winner
+        
+        self.president.step(self)
+        self.year += 1
+    
+    def hold_vote(self) -> list[int]:
+        votes: list[int] = list(map(lambda x : round(random.random()), self.arr))
+        
+        votecount: list[int] = [0, 0]
+        for vote in votes: votecount[vote] += 1
+        
+        return votecount
