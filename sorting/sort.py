@@ -19,7 +19,7 @@ def random_sample_recreation(population, k):
     return result
 
 class Sort:
-    def __init__(self, w, h):
+    def __init__(self, w: int, h: int):
         randarr: list[float] = [random.random() for i in range(w)]
         roundarr: list[int] = list(map(lambda x : round(x*h), randarr))
         self.arr: list[int] = roundarr
@@ -27,7 +27,6 @@ class Sort:
         self.width: int = w
         self.height: int = h
         self.pos: int = 0
-        self.lastpos: int = 0
         
         self.verified: bool = True
         self.done: int = 0
@@ -45,27 +44,29 @@ class Sort:
         
         matrix.npxl.fill((0, 0, 0))
         
-        arrlen = len(self.arr)
+        arrlen: int = len(self.arr)
         for i in range(arrlen):
             color = (255, 255, 255)
             
             if self.done >= 1:
                 if i <= self.pos: color = (0, 255, 0)
-                if self.pos <= self.lastpos:
-                    self.pos += 1
-                    self.lastpos = self.pos
             
             val = self.arr[i]
             for y in range(self.height):
                 matrix[arrlen-i-1, y] = (color if y <= val else (0, 0, 0))
 
 class StepSort(Sort):
+    def __init__(self, w, h, lookahead = True):
+        Sort.__init__(self, w, h)
+        self.lookahead = lookahead
+    
     def draw(self, matrix):
         Sort.draw(self, matrix)
+        if self.done >= 1: return
         
         arrlen: int = len(self.arr)
-        color = (0, 255, 0)
-            
+        color = (255, 255, 0)
+        
         val = self.arr[self.pos]
         for y in range(self.height):
             matrix[arrlen-self.pos-1, y] = color if y <= val else (0, 0, 0)
@@ -73,10 +74,11 @@ class StepSort(Sort):
     def step(self):
         Sort.step(self)
         
-        if self.pos < len(self.arr) - 1:
+        if self.pos <= len(self.arr) - 1:
             self.process()
             self.pos += 1
-        else:
+        
+        if self.pos > len(self.arr) - 1:
             self.pos = 0
             if self.verified:
                 self.done += 1
@@ -139,9 +141,12 @@ class MiracleSort(Sort):
         if self.verified:
             self.done += 1
 
-class GaslightSort(Sort):
+class GaslightSort(StepSort):
     def step(self):
-        self.done = 1
+        if self.pos >= len(self.arr) - 1:
+            self.done += 1
+            self.pos = 0
+        self.pos += 1
 
 class BogoSort(Sort):
     def step(self):
@@ -157,24 +162,28 @@ class SortSort(StepSort):
         Sort.__init__(self, w, h)
         
         self.newarr = []
-        self.target = 0
-        self.compensate = 0
+        self.newverified = False
+        self.target = -1
+    
+    def step(self):
+        StepSort.step(self)
+        self.newverified = self.newarr == sorted(self.newarr) and len(self.arr) == 0
     
     def draw(self, matrix):
         StepSort.draw(self, matrix)
     
     def process(self):
-        if self.pos == 0: self.compensate = 0
-        i: int = self.pos-self.compensate
+        if self.pos == 0:
+            self.target += 1
         
         if self.arr[self.pos] == self.target:
-            self.newarr.append(self.arr.pop(i))
-            self.compensate += 1
+            self.newarr.append(self.arr.pop(self.pos))
+            self.pos -= 1
             return
         
-        if self.newarr == sorted(self.newarr):
-            self.arr.append(self.newarr[i])
-            self.compensate += 1
+        if self.newverified:
+            self.arr.append(self.newarr[self.pos])
+            return
 
 class DarwinSort(Sort):
     def step(self):
@@ -194,7 +203,7 @@ class AmericaSort(Sort):
     def __init__(self, w, h):
         Sort.__init__(self, w, h)
         
-        self.president: type[Sort] = MiracleSort
+        self.president: Sort = MiracleSort(w, h)
         self.year = 1
     
     def step(self):
@@ -208,9 +217,11 @@ class AmericaSort(Sort):
                 results = self.hold_vote()
             
             winner: type[Sort] = candidates[int(results[0] > results[1])]
-            self.president = winner
+            self.president = winner(self.width, self.height)
+            self.president.arr = self.arr
         
-        self.president.step(self)
+        self.president.step()
+        self.arr = self.president.arr
         self.year += 1
     
     def hold_vote(self) -> list[int]:

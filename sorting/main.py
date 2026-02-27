@@ -5,7 +5,7 @@ import time
 
 import sort_animation as sortanim, sort as algorithms
 
-width: int = 8
+width: int = 16
 height: int = 8
 
 
@@ -19,7 +19,7 @@ pixel = pixelstrip.PixelStrip(
     options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG},
     brightness=0.015
 )
-pixel.animation = sortanim.SortAnimation(algorithms.AmericaSort, width, height, fps=30)
+pixel.animation = sortanim.SortAnimation(algorithms.IngsocSort, width, height, fps=30)
 
 pixel.clear()
 

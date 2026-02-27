@@ -3,7 +3,7 @@ import pixelstrip
 from sort import *
 
 class SortAnimation(pixelstrip.Animation):
-    def __init__(self, sorttype: type[Sort], w, h, fps):
+    def __init__(self, sorttype: type[Sort], w, h, fps = 60):
         pixelstrip.Animation.__init__(self)
         
         self.sorter = sorttype(w, h)
