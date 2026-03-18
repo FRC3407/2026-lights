@@ -25,10 +25,10 @@ animation = [
 
 # List of PixelStrips
 strip = [
-    PixelStrip(board.GP13, 120, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
-    PixelStrip(board.GP15, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR}),
-    PixelStrip(board.GP16, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP18, 24, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS)
+    PixelStrip(board.GP13, 24, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
+    PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP16, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP18, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
 ]
 # The built-in LED will turn on for half a second after every message 
 led = digitalio.DigitalInOut(board.LED)
@@ -44,20 +44,20 @@ def receive_message():
     byte.  If there is a param associated with this message, it is 
     concatenated after the first byte.
     """
-    # global i2c
-    # message = i2c.request()
-    # if not message:
-    #     return None
-    # with message:
-    #     message_bytes = message.read()
-    #     b = message_bytes[0]
-    #     strip_num = int((b & 0xE0) >> 5)
-    #     anim_num = int(b & 0x1F)
-    #     param = None 
-    #     if len(message_bytes) > 1:
-    #         param = message_bytes[1:].decode('utf-8')
-    #     print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
-    #     return (strip_num, anim_num, param)
+    global i2c
+    message = i2c.request()
+    if not message:
+        return None
+    with message:
+        message_bytes = message.read()
+        b = message_bytes[0]
+        strip_num = int((b & 0xE0) >> 5)
+        anim_num = int(b & 0x1F)
+        param = None 
+        if len(message_bytes) > 1:
+            param = message_bytes[1:].decode('utf-8')
+        print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
+        return (strip_num, anim_num, param)
     return None
 
 googly_eyes_on = True
@@ -88,7 +88,7 @@ def main(i2c):
                 strip[strip_num].animation = None
             else:
                 googly_eyes_on = True
-                googly_eyes_timeout = current_time() -1
+                googly_eyes_timeout = current_time() - 1
             last_msg_time = current_time()
         led.value = (current_time() < last_msg_time + 0.5)
         if googly_eyes_on:
@@ -119,7 +119,6 @@ def pick_random_eyes():
         strip[2].animation = eyesAnim5Roll1Side()
 
 
-
 def blink(n, color=BLUE, sleep_time=0.4): 
     "Blink lights to show that the program is progressing."
     global strip, led
@@ -140,6 +139,6 @@ def blink(n, color=BLUE, sleep_time=0.4):
 
 if __name__ == "__main__": 
     blink(2, BLUE)
-    #with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
-    blink(1, GREEN)
-    main(i2c) 
+    with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
+        blink(1, GREEN)
+        main(i2c) 
