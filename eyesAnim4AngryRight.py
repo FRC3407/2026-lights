@@ -48,6 +48,6 @@ class eyesAnim4AngryRight(pixelstrip.Animation):
 
 if __name__ == "__main__": 
     matrix = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix.animation = ImageAnimation(0.075)
+    matrix.animation = eyesAnim4AngryRight(0.075)
     while True:
         matrix.draw()

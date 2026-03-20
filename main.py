@@ -9,7 +9,7 @@ from eyesAnim4AngryRight import eyesAnim4AngryRight
 from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from time import sleep
 from i2ctarget import I2CTarget
-from pixelstrip import PixelStrip, current_time, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG, RGB, MATRIX_TOP, MATRIX_LEFT
+from pixelstrip import PixelStrip, current_time, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG, RGB, MATRIX_TOP, MATRIX_LEFT, MATRIX_BOTTOM, MATRIX_RIGHT
 from colors import *
 
 from animation_pulse import PulseAnimation
@@ -25,7 +25,7 @@ animation = [
 
 # List of PixelStrips
 strip = [
-    PixelStrip(board.GP0, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP0, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_BOTTOM, MATRIX_RIGHT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
     PixelStrip(board.GP1, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
     PixelStrip(board.GP2, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
     PixelStrip(board.GP3, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
@@ -45,6 +45,8 @@ def receive_message():
     concatenated after the first byte.
     """
     global i2c
+    if i2c is None:
+        return None
     message = i2c.request()
     if not message:
         return None
@@ -101,22 +103,21 @@ def main(i2c):
 def pick_random_eyes():
     random_anim = random.randint(0,3)
     if random_anim == 0:
+        strip[0].animation = eyesAnim1LookAround()
         strip[1].animation = eyesAnim1LookAround()
-        strip[2].animation = eyesAnim1LookAround()
     elif random_anim == 1:
+        strip[0].animation = eyesAnim2RollAround()
         strip[1].animation = eyesAnim2RollAround()
-        strip[2].animation = eyesAnim2RollAround()
     elif random_anim == 2:
+        strip[0].animation = eyesAnim3Blink()
         strip[1].animation = eyesAnim3Blink()
-        strip[2].animation = eyesAnim3Blink()
     elif random_anim == 3:
         #This is the only one with the eyes running 2 different things
-        #   Important!  These may need to change depending on how strips 1 & 2 are placed on the robot!
-        strip[1].animation = eyesAnim4AngryLeft()
-        strip[2].animation = eyesAnim4AngryRight()
+        strip[0].animation = eyesAnim4AngryLeft()
+        strip[1].animation = eyesAnim4AngryRight()
     elif random_anim == 4:
+        strip[0].animation = eyesAnim5Roll1Side()
         strip[1].animation = eyesAnim5Roll1Side()
-        strip[2].animation = eyesAnim5Roll1Side()
 
 
 
