@@ -44,20 +44,20 @@ def receive_message():
     byte.  If there is a param associated with this message, it is 
     concatenated after the first byte.
     """
-    # global i2c
-    # message = i2c.request()
-    # if not message:
-    #     return None
-    # with message:
-    #     message_bytes = message.read()
-    #     b = message_bytes[0]
-    #     strip_num = int((b & 0xE0) >> 5)
-    #     anim_num = int(b & 0x1F)
-    #     param = None 
-    #     if len(message_bytes) > 1:
-    #         param = message_bytes[1:].decode('utf-8')
-    #     print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
-    #     return (strip_num, anim_num, param)
+    global i2c
+    message = i2c.request()
+    if not message:
+        return None
+    with message:
+        message_bytes = message.read()
+        b = message_bytes[0]
+        strip_num = int((b & 0xE0) >> 5)
+        anim_num = int(b & 0x1F)
+        param = None 
+        if len(message_bytes) > 1:
+            param = message_bytes[1:].decode('utf-8')
+        print(f"received {len(message_bytes)} bytes      {(strip_num, anim_num, param)}")
+        return (strip_num, anim_num, param)
     return None
 
 googly_eyes_on = True
@@ -140,6 +140,6 @@ def blink(n, color=BLUE, sleep_time=0.4):
 
 if __name__ == "__main__": 
     blink(2, BLUE)
-    #with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
-    blink(1, GREEN)
-    main(i2c) 
+    with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
+        blink(1, GREEN)
+        main(i2c) 
