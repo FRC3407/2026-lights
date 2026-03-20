@@ -25,10 +25,10 @@ animation = [
 
 # List of PixelStrips
 strip = [
-    PixelStrip(board.GP13, 120, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS),
-    PixelStrip(board.GP15, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP16, width=8, offset=0, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP18, 24, offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS)
+    PixelStrip(board.GP0, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP1, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP2, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.GP3, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
 ]
 # The built-in LED will turn on for half a second after every message 
 led = digitalio.DigitalInOut(board.LED)
