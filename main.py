@@ -1,12 +1,6 @@
 import digitalio
 import board
 import random
-from eyesAnim1LookAround import eyesAnim1LookAround
-from eyesAnim2RollAround import eyesAnim2RollAround
-from eyesAnim3Blink import eyesAnim3Blink
-from eyesAnim4AngryLeft import eyesAnim4AngryLeft
-from eyesAnim4AngryRight import eyesAnim4AngryRight
-from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from time import sleep
 from i2ctarget import I2CTarget
 from pixelstrip import PixelStrip, current_time, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG, RGB, MATRIX_TOP, MATRIX_LEFT, MATRIX_BOTTOM, MATRIX_RIGHT
@@ -14,6 +8,14 @@ from colors import *
 
 from animation_pulse import PulseAnimation
 from animation_ladder import LadderAnimation
+from eyesAnim1LookAround import eyesAnim1LookAround
+from eyesAnim2RollAround import eyesAnim2RollAround
+from eyesAnim3Blink import eyesAnim3Blink
+from eyesAnim4AngryLeft import eyesAnim4AngryLeft
+from eyesAnim4AngryRight import eyesAnim4AngryRight
+from eyesAnim5Roll1Side import eyesAnim5Roll1Side
+from teamNumber import teamNumber
+from shooting import shooting
 
 I2C_ADDRESS = 0x41
 BRIGHTNESS = 0.5
@@ -21,6 +23,8 @@ BRIGHTNESS = 0.5
 # List of Animations
 animation = [
     LadderAnimation(color=RED),
+    teamNumber(),
+    shooting(),
 ]
 
 # List of PixelStrips
