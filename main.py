@@ -15,7 +15,8 @@ from eyesAnim4AngryLeft import eyesAnim4AngryLeft
 from eyesAnim4AngryRight import eyesAnim4AngryRight
 from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from teamNumber import teamNumber
-from shooting import shooting
+from shooting_green import shooting_green
+from Shooting_red import Shooting_red
 
 I2C_ADDRESS = 0x41
 BRIGHTNESS = 0.5
@@ -24,7 +25,8 @@ BRIGHTNESS = 0.5
 animation = [
     LadderAnimation(color=RED),
     teamNumber(),
-    shooting(),
+    shooting_green(),
+    shooting_red(),
 ]
 
 # List of PixelStrips
@@ -145,6 +147,6 @@ def blink(n, color=BLUE, sleep_time=0.4):
 
 if __name__ == "__main__": 
     blink(2, BLUE)
-    with I2CTarget(scl=board.SCL, sda=board.SDA, addresses=[I2C_ADDRESS]) as i2c:
+    with I2CTarget(scl=board.GP15, sda=board.GB14, addresses=[I2C_ADDRESS]) as i2c:
         blink(1, GREEN)
         main(i2c) 
