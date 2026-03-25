@@ -5,21 +5,22 @@ import random
 from colors import *
 
 
-class ImageAnimation(pixelstrip.Animation):
+class CrazyEyeball(pixelstrip.Animation):
 
-    def __init__(self, cycle_time=0.5,offset=0,emotion=1,mirror = False):
+    def __init__(self, cycle_time=0.5,offset=0,emotion=0,mirror = False):
         pixelstrip.Animation.__init__(self)
         self.cycle_time = cycle_time
         self.current_frame = 0
         self.mirror = mirror
         self.emotion = emotion
         self.imgdata = [[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0]],[[2,2,0,0,0,0,0,0],[2,2,2,0,0,0,0,0],[2,2,2,2,0,0,0,0],[2,2,2,2,2,0,0,0],[2,2,2,2,2,2,0,0],[2,2,2,2,2,2,2,0],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]]]
-        self.colorlist = [(0, 0, 0), (255, 255, 255),(255,0,255)]
+        self.colorlist = [(0, 0, 0), (18, 18, 18),(255,0,255)]
         self.eyePosition = [4,4]
         self.eyeVelocity = [0,0]
         # self.eyePosition2 = [4,4]
         # self.eyeVelocity2 = [0,0]
         self.eyelid = 0
+        self.eyeColor = (2, 2, 4)
 
         self.frames = len(self.imgdata)
         self.width = len(self.imgdata[0][0])
@@ -28,8 +29,8 @@ class ImageAnimation(pixelstrip.Animation):
 
     def reset(self, matrix):
         self.timeout = self.cycle_time
-        matrix.clear()
-        matrix.show()
+        # matrix.clear()
+        # matrix.show()
         self.current_frame = 0
 
     def draw(self, matrix, delta_time):
@@ -47,11 +48,15 @@ class ImageAnimation(pixelstrip.Animation):
             # print(self.imgdata[frame])
             for j in range(self.height):
                 matrix[self.height-1-i, j] = self.colorlist[self.imgdata[0][i][j]]
-        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])] = (0,0,0)
-        matrix[math.floor(self.eyePosition[0]-1),math.floor(self.eyePosition[1])] = (0,0,0)
-        matrix[math.floor(self.eyePosition[0]+1),math.floor(self.eyePosition[1])] = (0,0,0)
-        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])-1] = (0,0,0)
-        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])+1] = (0,0,0)
+        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]-1),math.floor(self.eyePosition[1])] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]+1),math.floor(self.eyePosition[1])] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])-1] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]),math.floor(self.eyePosition[1])+1] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]+1),math.floor(self.eyePosition[1]+1)] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]+1),math.floor(self.eyePosition[1]-1)] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]-1),math.floor(self.eyePosition[1])+1] = self.eyeColor
+        matrix[math.floor(self.eyePosition[0]-1),math.floor(self.eyePosition[1])-1] = self.eyeColor
         self.eyeVelocity[0] += random.randrange(-10,10)*0.05
         self.eyeVelocity[1] += random.randrange(-10,10)*0.05
         self.eyeVelocity[0] *= 0.9
@@ -80,7 +85,7 @@ class ImageAnimation(pixelstrip.Animation):
                     if self.mirror:
                         k = 7-i
                     color = self.colorlist[self.imgdata[1][j][k]]
-                    if not (color[0]==255 and color[1] == 0 and color[2] == 255):
+                    if not (color[0]==255 and color[1] == 0 and color[2] == 255 ) and self.emotion == 1:
                         matrix[i,j] = color
         for i in range(self.eyelid*4):
             for j in range(8):
@@ -89,9 +94,7 @@ class ImageAnimation(pixelstrip.Animation):
 
 if __name__ == "__main__": 
     matrix1 = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix1.animation = ImageAnimation(0,0,1)
-    matrix2 = pixelstrip.PixelStrip(board.GP16, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix2.animation = ImageAnimation(0,2,1,True)
+    matrix1.animation = CrazyEyeball(0,0,0)
     while True:
         matrix1.draw()
         matrix2.draw()

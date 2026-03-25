@@ -4,7 +4,7 @@ import math
 from colors import *
 
 
-class ImageAnimation(pixelstrip.Animation):
+class nutbolt(pixelstrip.Animation):
 
     def __init__(self, cycle_time=0.5):
         pixelstrip.Animation.__init__(self)
@@ -68,6 +68,6 @@ class ImageAnimation(pixelstrip.Animation):
 
 if __name__ == "__main__": 
     matrix = pixelstrip.PixelStrip(board.GP15, width=32, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
-    matrix.animation = ImageAnimation(0)
+    matrix.animation = nutbolt(0)
     while True:
         matrix.draw()

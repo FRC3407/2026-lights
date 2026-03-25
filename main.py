@@ -16,7 +16,9 @@ from eyesAnim4AngryRight import eyesAnim4AngryRight
 from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from teamNumber import teamNumber
 from shooting_green import shooting_green
-from Shooting_red import Shooting_red
+from shooting_red import shooting_red
+from CrazyEyeball import CrazyEyeball
+from nutbolt import nutbolt
 
 I2C_ADDRESS = 0x41
 BRIGHTNESS = 0.5
@@ -27,6 +29,7 @@ animation = [
     teamNumber(),
     shooting_green(),
     shooting_red(),
+    nutbolt()
 ]
 
 # List of PixelStrips
@@ -107,7 +110,7 @@ def main(i2c):
 
 #Picks a random animation for the eyes to play, then calls the corresponding class to run
 def pick_random_eyes():
-    random_anim = random.randint(0,3)
+    random_anim = random.randint(0,5)
     if random_anim == 0:
         strip[0].animation = eyesAnim1LookAround()
         strip[1].animation = eyesAnim1LookAround()
@@ -124,6 +127,11 @@ def pick_random_eyes():
     elif random_anim == 4:
         strip[0].animation = eyesAnim5Roll1Side()
         strip[1].animation = eyesAnim5Roll1Side()
+    elif random_anim == 5:
+        strip[0].animation = CrazyEyeball()
+        strip[1].animation = CrazyEyeball()
+    strip[1].animation = nutbolt()
+    strip[0].animation = nutbolt()
 
 
 
@@ -147,6 +155,6 @@ def blink(n, color=BLUE, sleep_time=0.4):
 
 if __name__ == "__main__": 
     blink(2, BLUE)
-    with I2CTarget(scl=board.GP15, sda=board.GB14, addresses=[I2C_ADDRESS]) as i2c:
+    with I2CTarget(scl=board.GP15, sda=board.GP14, addresses=[I2C_ADDRESS]) as i2c:
         blink(1, GREEN)
         main(i2c) 
