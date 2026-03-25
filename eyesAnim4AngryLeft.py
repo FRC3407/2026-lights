@@ -1,0 +1,53 @@
+# Name: eyesAnim4AngryLeft
+import board
+import pixelstrip
+from colors import *
+
+
+class eyesAnim4AngryLeft(pixelstrip.Animation):
+
+    def __init__(self, cycle_time=0.075):
+        pixelstrip.Animation.__init__(self)
+        self.cycle_time = cycle_time
+        self.current_frame = 0
+        self.imgdata = [[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,1,1,0,0,0,0],[0,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,0,0,0,0,0,0],[0,1,1,1,0,0,0,0],[1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,0],[1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,0,0,0,0,0,0],[0,1,1,1,0,0,0,0],[1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,1,1,0,0,0,0],[0,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]],[[0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,2,1,1],[0,1,1,2,2,2,1,0],[0,0,1,2,2,2,0,0]]]
+        self.colorlist = [(0, 0, 0), (13, 13, 13), (2, 2, 4)]
+
+        self.frames = len(self.imgdata)
+        self.width = len(self.imgdata[0][0])
+        self.height = len(self.imgdata[0])
+
+    def reset(self, matrix):
+        self.timeout = self.cycle_time
+        self.current_frame = 0
+
+    def draw(self, matrix, delta_time):
+        if self.is_timed_out():
+            if self.current_frame < self.frames-1:
+                self.current_frame = (self.current_frame + 1) % self.frames
+                self.draw_image(matrix, self.current_frame)
+            else:
+                self.current_frame = (self.current_frame + 1) % self.frames
+                self.draw_image(matrix, self.current_frame)
+                self.current_frame = (self.current_frame - 1) % self.frames
+            matrix.show()
+            if self.current_frame == 3:
+                self.timeout = 5
+            else:
+                self.timeout = self.cycle_time
+    
+    def draw_image(self, matrix, frame):
+        matrix.fill(BLACK)
+        for i in range(self.width):
+            # print(self.imgdata[frame])
+            for j in range(self.height):
+                matrix[self.height-1-i, j] = self.colorlist[self.imgdata[frame][i][j]]
+
+
+
+
+if __name__ == "__main__": 
+    matrix = pixelstrip.PixelStrip(board.GP15, width=8, height=8, bpp=4, pixel_order=pixelstrip.GRB, options={pixelstrip.MATRIX_COLUMN_MAJOR, pixelstrip.MATRIX_ZIGZAG})
+    matrix.animation = eyesAnim4AngryLeft(0.25)
+    while True:
+        matrix.draw()
