@@ -19,7 +19,7 @@ from shooting_green import shooting_green
 from shooting_red import shooting_red
 from CrazyEyeball import CrazyEyeball
 from nutbolt import nutbolt
-
+from Animation3407 import Animation3407
 I2C_ADDRESS = 0x41
 BRIGHTNESS = 0.5
 
@@ -29,7 +29,8 @@ animation = [
     teamNumber(),
     shooting_green(),
     shooting_red(),
-    nutbolt()
+    nutbolt(),
+    Animation3407()
 ]
 
 # List of PixelStrips
@@ -130,8 +131,9 @@ def pick_random_eyes():
     elif random_anim == 5:
         strip[0].animation = CrazyEyeball()
         strip[1].animation = CrazyEyeball()
-    strip[1].animation = nutbolt()
-    strip[0].animation = nutbolt()
+    animationsBigStrip = (nutbolt(),Animation3407())
+    strip[1].animation = animationsBigStrip[random.randint(0,1)]
+    strip[0].animation = animationsBigStrip[random.randint(0,1)]
 
 
 
