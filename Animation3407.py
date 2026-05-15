@@ -23,11 +23,13 @@ class Animation3407(pixelstrip.Animation):
 
         self.t=0
     def draw(self, strip, delta_time):
-        self.t+= 0.01
+        self.t+= 1
+        t = self.t
         for i in range(4):
-            color = [100+(math.sin(i+t)+1)*100,100+(math.sin(i+t*1.1)+1)*100,100+(math.sin(i+t*1.2)+1)*100]
+            color = [math.floor((math.sin(i+t)+1)*100),math.floor((math.sin(i+t*1.1)+1)*100),math.floor((math.sin(i+t*1.2)+1)*100)]
             self.colors[i+1] = color
-            self.colors[i+5] = [color[0]*0.5,color[1]*0.5,color[2]*0.5]
+            self.colors[i+5] = [color[0]*0.04,color[1]*0.04,color[2]*0.04]
+            # self.colors[i+5] = [0,0,0]
         for y in range(8):
             for x in range(32):
                 if (self.image[y][x] == 0): continue
