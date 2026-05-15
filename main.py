@@ -15,8 +15,11 @@ from eyesAnim4AngryLeft import eyesAnim4AngryLeft
 from eyesAnim4AngryRight import eyesAnim4AngryRight
 from eyesAnim5Roll1Side import eyesAnim5Roll1Side
 from teamNumber import teamNumber
-from shooting import shooting
-
+from shooting_green import shooting_green
+from shooting_red import shooting_red
+from CrazyEyeball import CrazyEyeball
+from nutbolt import nutbolt
+from Animation3407 import Animation3407
 I2C_ADDRESS = 0x41
 BRIGHTNESS = 0.5
 
@@ -24,15 +27,18 @@ BRIGHTNESS = 0.5
 animation = [
     LadderAnimation(color=RED),
     teamNumber(),
-    shooting(),
+    shooting_green(),
+    shooting_red(),
+    nutbolt(),
+    Animation3407()
 ]
 
 # List of PixelStrips
 strip = [
-    PixelStrip(board.GP0, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_BOTTOM, MATRIX_RIGHT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP1, width=8, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP2, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
-    PixelStrip(board.GP3, width=32, height=8, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.NEOPIXEL0, width=8, height=8,offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_BOTTOM, MATRIX_RIGHT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.NEOPIXEL1, width=8, height=8,offset=1,bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.NEOPIXEL3, width=32, height=8,offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_TOP, MATRIX_LEFT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
+    PixelStrip(board.NEOPIXEL4, width=32, height=8,offset=1, bpp=4, pixel_order="GRB", brightness=BRIGHTNESS, options={MATRIX_BOTTOM, MATRIX_RIGHT, MATRIX_COLUMN_MAJOR, MATRIX_ZIGZAG}),
 ]
 # The built-in LED will turn on for half a second after every message 
 led = digitalio.DigitalInOut(board.LED)
@@ -105,7 +111,7 @@ def main(i2c):
 
 #Picks a random animation for the eyes to play, then calls the corresponding class to run
 def pick_random_eyes():
-    random_anim = random.randint(0,3)
+    random_anim = random.randint(0,5)
     if random_anim == 0:
         strip[0].animation = eyesAnim1LookAround()
         strip[1].animation = eyesAnim1LookAround()
@@ -122,6 +128,12 @@ def pick_random_eyes():
     elif random_anim == 4:
         strip[0].animation = eyesAnim5Roll1Side()
         strip[1].animation = eyesAnim5Roll1Side()
+    elif random_anim == 5:
+        strip[0].animation = CrazyEyeball()
+        strip[1].animation = CrazyEyeball()
+    animationsBigStrip = (nutbolt(),Animation3407())
+    strip[2].animation = Animation3407()
+    strip[3].animation = Animation3407()
 
 
 
